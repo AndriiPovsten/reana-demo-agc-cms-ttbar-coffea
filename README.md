@@ -1,7 +1,7 @@
 ### REANA example - AGC CMS ttbar analysis with Coffea
 
-This `[REANA] (<http://www.reana.io/>)`_ reproducible analysis example demonstrates
-a `[AGC] (<https://arxiv.org/abs/1010.2506>)` - Analysis Grand Challenge.
+This `[REANA](<http://www.reana.io/>)`_ reproducible analysis example demonstrates
+a `[AGC](<https://arxiv.org/abs/1010.2506>)` - Analysis Grand Challenge.
 
 ### Analysis Grand Challenge
 
