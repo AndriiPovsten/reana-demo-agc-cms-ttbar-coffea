@@ -1,12 +1,11 @@
 N_FILES_MAX_PER_SAMPLE = -1
 download_sleep = 0
 url_prefix = "root://eospublic.cern.ch//eos/opendata"
-
+#In order to run analysis from Nebraska use this prefix
+#url_prefix = "https://xrootd-local.unl.edu:1094//" 
 import glob
 import json
 import os
-
-
 def extract_samples_from_json(json_file):
     output_files = []
     
@@ -48,7 +47,6 @@ def get_items(json_file):
     
     return samples 
 
-
 rule all:
     input:
         "histograms_merged.root"
@@ -57,7 +55,7 @@ rule process_sample_one_file_in_sample:
     container:
         "povstenandrii/ttbarkerberos:20240311"
     resources:
-        kubernetes_memory_limit="3700Mi"
+        kubernetes_memory_limit="1850Mi"
     input:
         "ttbar_analysis_reana.ipynb"
     output:
@@ -67,12 +65,11 @@ rule process_sample_one_file_in_sample:
     shell:
         "/bin/bash -l && source fix-env.sh && python prepare_workspace.py sample_{params.sample_name}_{wildcards.filename} && papermill ttbar_analysis_reana.ipynb sample_{params.sample_name}_{wildcards.filename}_out.ipynb -p sample_name {params.sample_name} -p filename {url_prefix}{wildcards.filename} -k python3"
 
-
 rule process_sample:
     container:
         "povstenandrii/merged_povsten:20240215"
     resources:
-        kubernetes_memory_limit="3700Mi"
+        kubernetes_memory_limit="1850Mi"
     input:
         "file_merging.ipynb",
         get_file_paths
@@ -82,6 +79,7 @@ rule process_sample:
         sample_name = '{sample}__{condition}'
     shell:
         "papermill file_merging.ipynb merged_{params.sample_name}.ipynb -p sample_name {params.sample_name} -k python3"
+
 rule merging_histograms:
     container:
         "povstenandrii/ttbarkerberos:20240311"
