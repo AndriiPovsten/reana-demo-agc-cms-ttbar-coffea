@@ -53,7 +53,7 @@ rule all:
 
 rule process_sample_one_file_in_sample:
     container:
-        "povstenandrii/ttbarkerberos:20240311"
+        "povstenandrii/reana-agc:20240506"
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
@@ -67,7 +67,7 @@ rule process_sample_one_file_in_sample:
 
 rule process_sample:
     container:
-        "povstenandrii/merged_povsten:20240215"
+        "povstenandrii/reana-agc:20240506"
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
@@ -82,7 +82,7 @@ rule process_sample:
 
 rule merging_histograms:
     container:
-        "povstenandrii/ttbarkerberos:20240311"
+        "povstenandrii/reana-agc:20240506"
     resources:
         kubernetes_memory_limit="3700Mi"
     input:
