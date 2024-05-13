@@ -43,7 +43,7 @@ We are using the modified verison of the ``analysis-systems-base`` [Docker image
 In our case, the Dockerfile creates a conda virtual environment with all necessary packages for running the AGC analysis.
 
 ```console
-$ less environments/Dockerfile
+$ less environment/Dockerfile
 ```
 
 We can build our AGC environment image and give it a name
