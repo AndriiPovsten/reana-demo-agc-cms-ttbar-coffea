@@ -8,8 +8,6 @@
 #     conda-lock install -n YOURENV --file full.conda-lock.yml
 # To update a single package to the latest version compatible with the version constraints in the source:
 #     conda-lock lock --lockfile full.conda-lock.yml --update PACKAGE
-# To re-solve the entire environment, e.g. after changing a version constraint in the source file:
-#     conda-lock -f /home/feickert/Code/GitHub/IRIS-HEP/analysis-systems-base/docker/environment.yml --lockfile full.conda-lock.yml
 metadata:
   channels:
   - url: conda-forge

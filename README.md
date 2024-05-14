@@ -20,8 +20,15 @@ This includes
 The physics analysis task is a $t\bar{t}$ cross-section measurement with 2015 CMS Open Data (see `datasets/cms-open-data-2015`).
 The current reference implementation can be found in `analyses/cms-open-data-ttbar`.
 
-### 1. Input data for ``reana.yaml`` 
-This file describes the above analysisc structure with its inputs, code, runtime environment, computational workflow steps and expected outputs.
+### 1. Input data 
+
+We are using [2015 CMS Open Data](https://cms.cern/news/first-cms-open-data-lhc-run-2-released) in this demonstration to showcase an analysis pipeline. The input `.root` files are located in the  `nanoAODschema.json`.
+## Analysis Code
+The current coffea AGC version defines the coffea Processor, which includes a lot of the physics analysis details:
+- event filtering and the calculation of observables,
+- event weighting,
+- calculating systematic uncertainties at the event and object level,
+- filling all the information into histograms that get aggregated and ultimately returned to us by coffea.
 
 The analysis takes the following inputs:
 
@@ -45,12 +52,16 @@ In our case, the Dockerfile creates a conda virtual environment with all necessa
 ```console
 $ less environment/Dockerfile
 ```
+Let's go inside the environment and build it
+```console
+$ cd environment/
+```
 
 We can build our AGC environment image and give it a name
 `docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea`:
 
 ```console
-$ docker build -f environment/Dockerfile -t docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea .
+$ docker build -t docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea .
 ```
 
 We can push the image to the DockerHub image registry:
@@ -59,30 +70,54 @@ We can push the image to the DockerHub image registry:
 $ docker push docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea
 ```
 
-### 3. Snakemake multicascading
+### 3. Kerberos authentication
+Some data are located at the eos/public so in order to process the big amount of files, user should be authenticated with Kerberos.
+In our case we achieve it by setting up:
+```console
+workflow:
+  type: snakemake
+  resources:
+    kerberos: true
+  file: Snakefile
+```
+If you are pocessing small amount of files (less than 10) you can set this option to `False`.
+Or you can also set the kerberos authentication via the Snakemake rules.
+For deeper understanding please refer to the (REANA documentation)[https://docs.reana.io/advanced-usage/access-control/kerberos/]
+
+### 4. AGC workflow for Snakemake suitability  
 REANA provides support for the Snakemake workflow engine. To ensure the fastest execution of the AGC ttbar workflow, a two-level (multicascading) parallelization approach with Snakemake is implemented.
 In the initial step, Snakemake distributes all jobs across separate nodes, each with a single `.root` file for `ttbar_analysis_reana.ipynb`. 
 Subsequently, after the completion of each rule, the merging of individual files into one per sample takes place.
+#Here is the high level of AGC workflow 
 
-          ttbar_1    ttbar_2  ttbar_3 ...        wjets_1   wjets_2   wjets_3 ...
+```console
+                                +-----------------------------------------+
+                                | Take the CMS open data from nanoaod.json|
+                                +-----------------------------------------+
+                                                    |
+                                                    |
+                                                    |
+                                                    v  
+                                  +-----------------------------------+
+                                  |rule: Process each file in parallel|
+                                  +-----------------------------------+
+                                                    |
+                                                    |
+                                                    |
+                                                    v
+                                +-----------------------------------------+                
+                                |rule: Merge created files for each sample|
+                                +-----------------------------------------+  
+                                                    |
+                                                    |
+                                                    |
+                                                    v
+                                +----------------------------------------------+ 
+                                |rule: Merge sample files into single histogram| 
+                                +----------------------------------------------+
+```
 
-              \        |      /                      \      |       /
-               \       |     /                        \     |      /
-
-                merge ttbar_nominal                  merge wjets_nominal
-
-                         \                                /
-                          \                              /
-
-                                   merge all samples
-
-                                          |
-                                          |
-
-                                  histogram_merged.root
-
-
-### 4. Running the AGC on REANA
+### 5. Running the AGC on REANA
 
 The [reana.yaml](reana.yaml) file describes the above analysis
 structure with its inputs, code, runtime environment, computational workflow steps and
@@ -137,7 +172,7 @@ $ reana-client ls
 Please see the [REANA-Client](https://reana-client.readthedocs.io/) documentation for
 more detailed explanation of typical `reana-client` usage scenarios.
 
-### 5. Output results
+### 6. Output results
 
 The output is created under the name of ``histograms_merged.root`` which can be further evaluated with variety of AGC tools.
 

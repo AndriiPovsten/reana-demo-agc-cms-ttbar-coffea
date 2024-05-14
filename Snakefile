@@ -53,9 +53,9 @@ rule all:
 
 rule process_sample_one_file_in_sample:
     container:
-        "povstenandrii/reana-agc:20240506"
+        "docker.io/reanahub/reana-demo-agc-cmc-ttbar-coffea:1.0.0"
     resources:
-        kubernetes_memory_limit="1850Mi"
+        kubernetes_memory_limit="3700Mi"
     input:
         "ttbar_analysis_reana.ipynb"
     output:
@@ -67,7 +67,7 @@ rule process_sample_one_file_in_sample:
 
 rule process_sample:
     container:
-        "povstenandrii/reana-agc:20240506"
+        "docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
@@ -78,13 +78,13 @@ rule process_sample:
     params:
         sample_name = '{sample}__{condition}'
     shell:
-        "papermill file_merging.ipynb merged_{params.sample_name}.ipynb -p sample_name {params.sample_name} -k python3"
+        "/bin/bash -l && source fix-env.sh && papermill file_merging.ipynb merged_{params.sample_name}.ipynb -p sample_name {params.sample_name} -k python3"
 
 rule merging_histograms:
     container:
-        "povstenandrii/reana-agc:20240506"
+        "docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
     resources:
-        kubernetes_memory_limit="3700Mi"
+        kubernetes_memory_limit="1850Mi"
     input:
         "everything_merged_ttbar__nominal.root",
         "everything_merged_ttbar__ME_var.root",
