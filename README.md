@@ -1,7 +1,7 @@
 # REANA example - AGC CMS ttbar analysis with Coffea
 
-This [REANA](http://www.reana.io/)_ reproducible analysis example demonstrates
-a  [AGC](https://arxiv.org/abs/1010.2506) - Analysis Grand Challenge.
+This demo shows the submission of [AGC](https://arxiv.org/abs/1010.2506) - Analysis Grand Challenge
+to the [REANA](http://www.reana.io/) using the Snakemake as an workflow engine.
 
 ## Analysis Grand Challenge
 
