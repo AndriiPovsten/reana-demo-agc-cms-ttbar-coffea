@@ -101,12 +101,11 @@ We can build our AGC environment image and give it a name
 $ docker build -t docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea .
 ```
 
-We can push the image to the DockerHub image registry:
+After this, we can push the image to the DockerHub image registry:
 
 ```console
 $ docker push docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea
 ```
-
 
 Some data are located at the eos/public so in order to process the big amount of files, user should be authenticated with Kerberos.
 In our case we achieve it by setting up:

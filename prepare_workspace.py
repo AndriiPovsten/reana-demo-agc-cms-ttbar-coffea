@@ -1,6 +1,11 @@
 import os
 import sys
-
 # Create the sample name directory folder structure
 sample_filename = sys.argv[1]
-os.makedirs(os.path.split(sample_filename)[0], exist_ok=True)
+#Split the sample filename to remove everything after the second-to-last underscore
+directory_name = '_'.join(sample_filename.split('_')[:-1])
+
+# Create the directory if one not existing
+os.makedirs(directory_name, exist_ok=True)
+
+print(f"Directory structure created for: {directory_name}")
