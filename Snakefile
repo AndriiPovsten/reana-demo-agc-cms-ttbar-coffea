@@ -2,7 +2,7 @@ import glob
 import json
 import os
 #Funtion to extract samples from input JSON file and generate necessary .txt files
-N_FILES_MAX_PER_SAMPLE = 1
+N_FILES_MAX_PER_SAMPLE = config["file_number"]
 def extract_samples_from_json(json_file):
     output_files = []
     with open(json_file, "r") as fd:
