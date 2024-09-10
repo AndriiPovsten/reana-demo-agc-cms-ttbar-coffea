@@ -2,7 +2,7 @@ import glob
 import json
 import os
 #Funtion to extract samples from input JSON file and generate necessary .txt files
-N_FILES_MAX_PER_SAMPLE = -1
+N_FILES_MAX_PER_SAMPLE = 1
 def extract_samples_from_json(json_file):
     output_files = []
     with open(json_file, "r") as fd:
@@ -33,29 +33,32 @@ def get_file_paths(wildcards, max=N_FILES_MAX_PER_SAMPLE):
     # Using the index as the wildcard, creating a path for each file based on it's index
     return [f"histograms/histograms_{wildcards.sample}__{wildcards.condition}__{index}.root" for index in range(len(filepaths))][:max]
 
-samples_conditions = extract_samples_from_json("nanoaod_inputs.json")
+samples_conditions = extract_samples_from_json(config["input_file"])
 
 rule all:
     input:
-        "histograms_merged.root"
+        config["output_file"]
 
 rule process_sample_one_file_in_sample:
     container:
-        "docker.io/reanahub/reana-demo-agc-cmc-ttbar-coffea:1.0.0"
+        "povstenandrii/ttbarkerberos:20240311"
+        #"docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
-        "ttbar_analysis_reana.ipynb"
+        notebook=config["notebook"]
     output:
         "histograms/histograms_{sample}__{condition}__{index}.root"
     params:
         sample_name = '{sample}__{condition}'
     shell:
-        "/bin/bash -l && source fix-env.sh && python prepare_workspace.py sample_{params.sample_name}_{wildcards.index} && papermill ttbar_analysis_reana.ipynb sample_{params.sample_name}_{wildcards.index}_out.ipynb -p sample_name {params.sample_name} -p index {wildcards.index} -k python3"
+        "/bin/bash -l && source fix-env.sh && python prepare_workspace.py sample_{params.sample_name}_{wildcards.index} && papermill {input.notebook} sample_{params.sample_name}_{wildcards.index}_out.ipynb -p"
+        "sample_name {params.sample_name} -p index {wildcards.index} -k python3"
 
 rule process_sample:
     container:
-        "docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
+        "povstenandrii/ttbarkerberos:20240311"
+        #"docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
@@ -70,7 +73,8 @@ rule process_sample:
 
 rule merging_histograms:
     container:
-        "docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
+        "povstenandrii/ttbarkerberos:20240311"
+        #"docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
@@ -83,10 +87,10 @@ rule merging_histograms:
         "everything_merged_single_top_t_chan__nominal.root",
         "everything_merged_single_top_tW__nominal.root",
         "everything_merged_wjets__nominal.root",
-        "final_merging.ipynb"
+        notebook=config["final_merging"]
     output:
-        "histograms_merged.root"
+        output_file=config["output_file"]
     shell:
-        "/bin/bash -l && source fix-env.sh && papermill final_merging.ipynb result_notebook.ipynb -k python3"
+        "/bin/bash -l && source fix-env.sh && papermill {input.notebook} result_notebook.ipynb -k python3"
 
     

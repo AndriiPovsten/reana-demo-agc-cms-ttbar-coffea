@@ -1,4 +1,3 @@
-
 FROM almalinux:9 as base
 
 SHELL ["/bin/bash", "-c"]
@@ -37,7 +36,7 @@ RUN yum install -y bzip2 && \
     micromamba env list && \
     micromamba install --channel conda-forge --freeze-installed --yes cmake gcc git && \
     micromamba clean --yes --all && \
-    python -m pip --no-cache-dir install --upgrade pip setuptools wheel && \
+    python -m pip --no-cache-dir install --upgrade pip 'setuptools<71' wheel && \
     python -m pip --no-cache-dir install --no-deps --require-hashes --only-binary :all: --no-binary torch-geometric --use-pep517 --requirement /docker/requirements.lock && \
     python -m pip --no-cache-dir install --find-links https://data.pyg.org/whl/torch-1.12.1+cpu.html 'torch-scatter==2.1.0+pt112cpu' 'torch-sparse==0.6.15+pt112cpu' 'torch-cluster==1.6.0+pt112cpu' 'torch-spline-conv==1.2.1+pt112cpu' && \
     python -m ipykernel install --name="analysis-systems" --display-name="Analysis Systems" --sys-prefix && \

@@ -178,7 +178,10 @@ more detailed explanation of typical `reana-client` usage scenarios.
 
 ### 5. Output results
 
-The output is created under the name of ``histograms_merged.root`` which can be further evaluated with variety of AGC tools.
+The output is created under the name of ``histograms.root`` which can be further evaluated with variety of AGC tools. Here we are providing the simple figures of collected results:
+![Figure1](plots/4j1b_values.png)
+![Figure2](plots/4j2b_values.png)
+
 
 
 

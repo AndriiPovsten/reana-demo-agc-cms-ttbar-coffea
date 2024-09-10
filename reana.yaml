@@ -13,6 +13,8 @@ inputs:
   directories:
     - histograms
     - utils
+  parameters:
+    input: inputs.yaml
 workflow:
   type: snakemake
   resources:
@@ -20,4 +22,4 @@ workflow:
   file: Snakefile
 outputs:
   files:
-    - histograms_merged.root
+    - histograms.root
