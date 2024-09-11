@@ -41,8 +41,7 @@ rule all:
 
 rule process_sample_one_file_in_sample:
     container:
-        "povstenandrii/ttbarkerberos:20240311"
-        #"docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
+        "docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
@@ -57,8 +56,7 @@ rule process_sample_one_file_in_sample:
 
 rule process_sample:
     container:
-        "povstenandrii/ttbarkerberos:20240311"
-        #"docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
+        "docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
@@ -73,8 +71,7 @@ rule process_sample:
 
 rule merging_histograms:
     container:
-        "povstenandrii/ttbarkerberos:20240311"
-        #"docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
+        "docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0"
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
