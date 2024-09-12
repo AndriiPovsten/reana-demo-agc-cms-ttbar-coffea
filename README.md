@@ -3,11 +3,11 @@
 ## About
 
 This demo shows the submission of [AGC](https://arxiv.org/abs/1010.2506) - Analysis Grand Challenge
-to the [REANA](http://www.reana.io/) using the Snakemake as an workflow engine.
+to the [REANA](http://www.reana.io/), using Snakemake as the workflow engine.
 
 ### Analysis Grand Challenge
 
-For full explanation please have a look at this documentation:
+For a full explanation please have a look at this documentation:
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7274936.svg)](https://doi.org/10.5281/zenodo.7274936)
 [![Documentation Status](https://readthedocs.org/projects/agc/badge/?version=latest)](https://agc.readthedocs.io/en/latest/?badge=latest)
 
@@ -42,9 +42,8 @@ The analysis takes the following inputs:
 - ``final_merging.ipynb`` Notebook to merge histograms together all of 
 
 ### 2. Analysis Code 
-REANA provides support for the Snakemake workflow engine. To ensure the fastest execution of the AGC ttbar workflow, a two-level (multicascading) parallelization approach with Snakemake is implemented.
-In the initial step, Snakemake distributes all jobs across separate nodes, each with a single `.root` file for `ttbar_analysis_reana.ipynb`. 
-Subsequently, after the completion of each rule, the merging of individual files into one per sample takes place.
+REANA supports the Snakemake workflow engine. To ensure optimal execution of the AGC ttbar workflow, we implement a two-level (multicascading) parallelization approach with Snakemake. Initially, Snakemake distributes all jobs across separate nodes, each working on a single `.roo`t file `for ttbar_analysis_reana.ipynb`.
+Once each rule completes, the individual files are merged into one per sample.
 #Here is the high level of AGC workflow 
 
 ```console
@@ -82,14 +81,14 @@ To be able to rerun the AGC after some time, we need to
 analysis is using. We shall achieve this by preparing a [Docker](https://www.docker.com/)
 container image for our analysis steps.
 
-We are using the modified verison of the ``analysis-systems-base`` [Docker image](https://github.com/iris-hep/analysis-systems-base) container with additional packages, the main on is [papermill](https://papermill.readthedocs.io/en/latest/) which allows to run the Jupyter Notebook from the command line with additional parameters.
+We are using the modified version of the ``analysis-systems-base`` [Docker image](https://github.com/iris-hep/analysis-systems-base) container with additional packages, the main on is [papermill](https://papermill.readthedocs.io/en/latest/) which allows running Jupyter Notebooks from the command line with additional parameters.
 
 In our case, the Dockerfile creates a conda virtual environment with all necessary packages for running the AGC analysis.
 
 ```console
 $ less environment/Dockerfile
 ```
-Let's go inside the environment and build it
+Let's enter the environment and build it
 ```console
 $ cd environment/
 ```
@@ -116,7 +115,7 @@ workflow:
     kerberos: true
   file: Snakefile
 ```
-If you are pocessing small amount of files (less than 10) you can set this option to `False`.
+If you are processing a small number of files (less than 10) you can set this option to `False`.
 Or you can also set the kerberos authentication via the Snakemake rules.
 For deeper understanding please refer to the (REANA documentation)[https://docs.reana.io/advanced-usage/access-control/kerberos/]
 
@@ -178,7 +177,7 @@ more detailed explanation of typical `reana-client` usage scenarios.
 
 ### 5. Output results
 
-The output is created under the name of ``histograms.root`` which can be further evaluated with variety of AGC tools. Here we are providing the simple figures of collected results:
+The output is created under the name `histograms.root`, which can be further analyzed using various AGC tools. Below are simple figures of the collected results:
 ![Figure1](plots/4j1b_values.png)
 ![Figure2](plots/4j2b_values.png)
 

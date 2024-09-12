@@ -1,6 +1,4 @@
 #File for setting Snakefile parameters
-notebook: ttbar_analysis_reana.ipynb
-file_number: -1 #Set the number of files to be processed for each sample
+n_files_max_per_sample: 1 #Set the number of files to be processed for each sample
 input_file: nanoaod_inputs.json
 output_file: histograms.root
-final_merging: final_merging.ipynb

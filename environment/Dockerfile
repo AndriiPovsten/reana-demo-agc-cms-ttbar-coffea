@@ -1,4 +1,4 @@
-FROM almalinux:9 as base
+FROM lmalinux:9 AS base
 
 SHELL ["/bin/bash", "-c"]
 

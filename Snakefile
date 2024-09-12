@@ -2,7 +2,7 @@ import glob
 import json
 import os
 #Funtion to extract samples from input JSON file and generate necessary .txt files
-N_FILES_MAX_PER_SAMPLE = config["file_number"]
+N_FILES_MAX_PER_SAMPLE = config["n_files_max_per_sample"]
 def extract_samples_from_json(json_file):
     output_files = []
     with open(json_file, "r") as fd:
@@ -45,7 +45,7 @@ rule process_sample_one_file_in_sample:
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
-        notebook=config["notebook"]
+        notebook="ttbar_analysis_reana.ipynb"
     output:
         "histograms/histograms_{sample}__{condition}__{index}.root"
     params:
@@ -60,14 +60,14 @@ rule process_sample:
     resources:
         kubernetes_memory_limit="1850Mi"
     input:
-        "file_merging.ipynb",
-        get_file_paths
+        get_file_paths,
+        notebook="file_merging.ipynb"
     output:
         "everything_merged_{sample}__{condition}.root"
     params:
         sample_name = '{sample}__{condition}'
     shell:
-        "/bin/bash -l && source fix-env.sh && papermill file_merging.ipynb merged_{params.sample_name}.ipynb -p sample_name {params.sample_name} -k python3"
+        "/bin/bash -l && source fix-env.sh && papermill {input.notebook} merged_{params.sample_name}.ipynb -p sample_name {params.sample_name} -k python3"
 
 rule merging_histograms:
     container:
@@ -84,7 +84,7 @@ rule merging_histograms:
         "everything_merged_single_top_t_chan__nominal.root",
         "everything_merged_single_top_tW__nominal.root",
         "everything_merged_wjets__nominal.root",
-        notebook=config["final_merging"]
+        notebook="final_merging.ipynb"
     output:
         output_file=config["output_file"]
     shell:
