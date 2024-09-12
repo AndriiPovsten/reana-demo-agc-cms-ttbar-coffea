@@ -49,10 +49,12 @@ rule process_sample_one_file_in_sample:
     output:
         "histograms/histograms_{sample}__{condition}__{index}.root"
     params:
-        sample_name = '{sample}__{condition}'
+        sample_name = "{sample}__{condition}"
     shell:
-        "/bin/bash -l && source fix-env.sh && python prepare_workspace.py sample_{params.sample_name}_{wildcards.index} && papermill {input.notebook} sample_{params.sample_name}_{wildcards.index}_out.ipynb -p"
-        "sample_name {params.sample_name} -p index {wildcards.index} -k python3"
+        "/bin/bash -l && source fix-env.sh && "
+        "python prepare_workspace.py sample_{params.sample_name}_{wildcards.index} > directory_name.txt && "
+        "papermill {input.notebook} $(cat directory_name.txt)/sample_{params.sample_name}_{wildcards.index}_out.ipynb "
+        "-p sample_name {params.sample_name} -p index {wildcards.index} -k python3"
 
 rule process_sample:
     container:
