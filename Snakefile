@@ -33,11 +33,11 @@ def get_file_paths(wildcards, max=N_FILES_MAX_PER_SAMPLE):
     # Using the index as the wildcard, creating a path for each file based on it's index
     return [f"histograms/histograms_{wildcards.sample}__{wildcards.condition}__{index}.root" for index in range(len(filepaths))][:max]
 
-samples_conditions = extract_samples_from_json(config["input_file"])
+samples_conditions = extract_samples_from_json("nanoaod_inputs.json")
 
 rule all:
     input:
-        config["output_file"]
+        "hitograms.root"
 
 rule process_sample_one_file_in_sample:
     container:
@@ -86,7 +86,7 @@ rule merging_histograms:
         "everything_merged_wjets__nominal.root",
         notebook="final_merging.ipynb"
     output:
-        output_file=config["output_file"]
+        "histograms.root"
     shell:
         "/bin/bash -l && source fix-env.sh && papermill {input.notebook} result_notebook.ipynb -k python3"
 
